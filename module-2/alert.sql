@@ -11,9 +11,9 @@ CREATE TABLE staging_tasty_bytes.telemetry.data_quality_alerts (
 );
 
 -- Create a serverless alert with a schedule:
-
+create or replace alter order_data_quality_alert
   
-  SCHEDULE = 
+  SCHEDULE = '30 MINUTES'
   IF (EXISTS (
     SELECT * FROM STAGING_TASTY_BYTES.RAW_POS.ORDER_HEADER 
     WHERE (ORDER_AMOUNT IS NULL OR ORDER_TOTAL IS NULL) 
@@ -34,7 +34,8 @@ CREATE TABLE staging_tasty_bytes.telemetry.data_quality_alerts (
       AND ORDER_TS > DATEADD(hour, -6, CURRENT_TIMESTAMP());
         
       -- Call stored procedure for notification:
-      
+      -- call staging_tasty_bytes.raw_pos.notify_data_quality_team();
+
     END;
 
 -- Check alert status
